@@ -5,7 +5,7 @@ let getSolver (day, part) =
     ``module``.GetMethod($"solver{part}")
 
 let getLines day = 
-    System.IO.File.ReadAllLines $"Input/Day{day}.txt"
+    System.IO.File.ReadAllLines $"../../../../../input/Day{day}.txt"
 
 [<EntryPoint>]
 let main args =
