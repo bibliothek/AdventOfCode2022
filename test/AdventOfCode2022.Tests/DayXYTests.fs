@@ -5,8 +5,7 @@ open Xunit
 
 type DayXYTest() =
     let demoData =
-        [| ""
-           "" |]
+        [| |]
 
     [<Fact(Skip="Template")>]
     let ``Day XY part 1`` () =
