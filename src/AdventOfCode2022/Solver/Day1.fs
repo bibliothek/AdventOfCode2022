@@ -9,7 +9,7 @@ let sumInventories =
         (0 :: List.empty)
 
 let solver1 (lines: string array) =
-    lines |> sumInventories |> List.max |> string
+    lines |> sumInventories |> List.max
 
 let solver2 (lines: string array) =
     lines
@@ -17,4 +17,3 @@ let solver2 (lines: string array) =
     |> List.sortDescending
     |> List.take 3
     |> List.sum
-    |> string

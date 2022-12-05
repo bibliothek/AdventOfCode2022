@@ -1,11 +1,8 @@
-﻿open AdventOfCode2022.Solver
-open AdventOfCode2022.Common
+﻿open System.Reflection
 
-let getSolver (day, part): Solver =
-    match (day, part) with
-        | 1,1 -> Day1.solver1
-        | 1,2 -> Day1.solver2
-        | _ -> failwith $"Day {day} and Part {part} not implemented"
+let getSolver (day, part) =
+    let ``module`` = Assembly.GetExecutingAssembly().GetType($"AdventOfCode2022.Solver.Day{day}")
+    ``module``.GetMethod($"solver{part}")
 
 let getLines day = 
     System.IO.File.ReadAllLines $"Input/Day{day}.txt"
@@ -15,6 +12,7 @@ let main args =
     let day = args.[0] |> int
     let part = args.[1] |> int
     printfn $"Solving for day %i{day} part %i{part}\n"
-    let solution = getLines day |> getSolver (day, part)
-    printfn $"{solution}"
+    let solver = getSolver (day, part)
+    let result = solver.Invoke(null, [|(getLines day)|])
+    printfn $"{result}"
     0
