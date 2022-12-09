@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Array2DHelper.fs" />
+    <Compile Include="Solver\Day8.fs" />
     <Compile Include="Solver\Day7.fs" />
     <Compile Include="Solver\Day6.fs" />
     <Compile Include="Solver\DayXY.fs" />
