@@ -16,7 +16,8 @@ New-Item $PSScriptRoot/input/Day$Day.txt
 $solverProject = [System.Xml.XmlDocument](Get-Content $PSScriptRoot/src/AdventOfCode2022/AdventOfCode2022.fsproj)
 $solverElement = $solverProject.CreateElement("Compile")
 $solverElement.SetAttribute("Include", "Solver\Day$Day.fs")
-$solverProject.GetElementsByTagName("ItemGroup")[0].PrependChild($solverElement)
+$programNode = $solverProject.SelectSingleNode('//Compile[@Include="Program.fs"]')
+$solverProject.GetElementsByTagName("ItemGroup")[0].InsertBefore($solverElement, $programNode)
 $solverProject.Save("$PSScriptRoot/src/AdventOfCode2022/AdventOfCode2022.fsproj")
 
 $testProject = [System.Xml.XmlDocument](Get-Content $PSScriptRoot/test/AdventOfCode2022.Tests/AdventOfCode2022.Tests.fsproj)

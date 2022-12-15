@@ -1,11 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Solver\Day10.fs" />
-    <Compile Include="Solver\Day9.fs" />
     <Compile Include="Array2DHelper.fs" />
     <Compile Include="Solver\Day8.fs" />
     <Compile Include="Solver\Day7.fs" />
@@ -16,6 +14,8 @@
     <Compile Include="Solver\Day3.fs" />
     <Compile Include="Solver\Day4.fs" />
     <Compile Include="Solver\Day5.fs" />
+    <Compile Include="Solver\Day10.fs" />
+    <Compile Include="Solver\Day9.fs" />
     <Compile Include="Program.fs" />
     <Content Include="Properties\launchSettings.json" />
   </ItemGroup>
