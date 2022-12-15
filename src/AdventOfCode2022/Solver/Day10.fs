@@ -1,6 +1,7 @@
 module AdventOfCode2022.Solver.Day10
 
 open System
+open AdventOfCode2021
 
 type State =
     { Iteration: int
@@ -8,19 +9,27 @@ type State =
       OpenCheckpoints: Set<int>
       RegisteredValues: int list }
 
-let eval (state: State) (instruction: string) =
-    let newIteration =
-        if instruction = "noop" then
-            state.Iteration + 1
-        else
-            state.Iteration + 2
+type State2 =
+    { Iteration: int
+      SignalStrength: int
+      Display: char[,] }
 
-    let newSignalStrength =
-        if instruction = "noop" then
-            state.SignalStrength
-        else
-            state.SignalStrength
-            + (instruction.Substring 5 |> int)
+let getNewIteration currentIteration instruction =
+    if instruction = "noop" then
+        currentIteration + 1
+    else
+        currentIteration + 2
+
+let getNewSignalStrength currentSignalStrength instruction =
+    if instruction = "noop" then
+        currentSignalStrength
+    else
+        currentSignalStrength + (instruction.Substring 5 |> int)
+
+let eval (state: State) (instruction: string) =
+    let newIteration = getNewIteration state.Iteration instruction
+
+    let newSignalStrength = getNewSignalStrength state.SignalStrength instruction
 
     let nextCheckpoint =
         if state.OpenCheckpoints.IsEmpty then
@@ -30,8 +39,7 @@ let eval (state: State) (instruction: string) =
 
     let newOpenCheckpoints =
         if newIteration >= nextCheckpoint then
-            state.OpenCheckpoints
-            |> Set.remove state.OpenCheckpoints.MinimumElement
+            state.OpenCheckpoints |> Set.remove state.OpenCheckpoints.MinimumElement
         else
             state.OpenCheckpoints
 
@@ -39,22 +47,42 @@ let eval (state: State) (instruction: string) =
         if newOpenCheckpoints.Count = state.OpenCheckpoints.Count then
             state.RegisteredValues
         else
-            state.SignalStrength * nextCheckpoint
-            :: state.RegisteredValues
+            state.SignalStrength * nextCheckpoint :: state.RegisteredValues
 
     { Iteration = newIteration
       SignalStrength = newSignalStrength
       OpenCheckpoints = newOpenCheckpoints
       RegisteredValues = newRegisteredValues }
 
+let getSpritePosition (register: int) =
+    [ register - 1; register; register + 1 ] |> Set.ofList
+
+let getChar (register: int) (iteration: int) =
+    let spritePosition = getSpritePosition register
+    if spritePosition.Contains(iteration % 40) then '#' else '.'
+
+let drawIteration (display: char[,]) (iteration: int) (register: int) =
+    let c = getChar register iteration
+    let x = iteration % 40
+    let y = iteration / 40
+    display[x, y] <- c
+
+let eval2 (state: State2) (instruction: string) =
+    let newIteration = getNewIteration state.Iteration instruction
+
+    let newSignalStrength = getNewSignalStrength state.SignalStrength instruction
+
+    drawIteration state.Display state.Iteration state.SignalStrength
+
+    if newIteration = state.Iteration + 2 then
+        drawIteration state.Display (newIteration - 1) state.SignalStrength
+
+    { state with
+        Iteration = newIteration
+        SignalStrength = newSignalStrength }
+
 let solver1 (lines: string array) =
-    let checkpoints =
-        Set.ofList [ 20
-                     60
-                     100
-                     140
-                     180
-                     220 ]
+    let checkpoints = Set.ofList [ 20; 60; 100; 140; 180; 220 ]
 
     let result =
         lines
@@ -67,4 +95,13 @@ let solver1 (lines: string array) =
 
     result.RegisteredValues |> List.sum
 
-let solver2 (lines: string array) = failwith "error"
+let solver2 (lines: string array) =
+    let result =
+        lines
+        |> Array.fold
+            eval2
+            { Iteration = 0
+              SignalStrength = 1
+              Display = Array2D.init (40) 6 (fun _ _ -> 'X') }
+
+    result.Display |> Array2DHelper.getPrintableOverview
